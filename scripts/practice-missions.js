@@ -587,9 +587,11 @@ Después cierra el merge:
 \`\`\`bash
 npm start
 git add src/mensajes.js
-git commit
+git commit --no-edit
 git push origin main
 \`\`\`
+
+\`--no-edit\` acepta el mensaje de fusión que Git ya preparó. Si escribes solo \`git commit\`, se abrirá un editor de texto en la terminal: si es \`vim\`, se sale escribiendo \`:wq\` y Enter.
 
 ## Criterio de cierre
 El workflow cerrará este issue cuando \`main\` incluya los commits de \`feature/conflicto\`, contenga los dos mensajes del conflicto y no queden marcas de conflicto en el archivo.`
@@ -637,7 +639,8 @@ Dejar el \`README.md\` completo, con la estructura obligatoria y una explicació
 
 - En \`Instalación\`, indica que se necesita Node.js 20 o superior.
 - En \`Uso\`, explica cómo ejecutar el proyecto con \`npm start\` y qué imprime.
-- En \`Autores\`, escribe los nombres reales de integrantes, curso o grupo.
+- En \`Autores\`, borra el texto de la plantilla y escribe los nombres reales de integrantes, curso o grupo.
+- **Borra la explicación que trae la plantilla en \`Flujo de trabajo Git\` y escribe la tuya.** La validación rechaza el texto original: lo que se evalúa es que expliques lo que hiciste tú.
 - En \`Flujo de trabajo Git\`, explica con tus palabras:
   - qué hace \`git commit\` y qué hace \`git push\`;
   - para qué sirvieron las ramas \`feature/saludo\`, \`feature/despedida\` y \`feature/conflicto\`;

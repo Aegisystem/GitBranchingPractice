@@ -41,7 +41,7 @@ La misión 5 comprueba el uso de `--no-ff` como criterio **informativo**, no blo
 ## Interpretar los workflows
 
 - **Iniciar práctica**: `workflow_dispatch` y `push` a `main`. Crea la primera misión sin duplicarla si ya existe.
-- **Validar progreso de misiones**: escucha `create`, `delete`, `push` a cualquier rama y ejecución manual. Comenta el issue activo, lo cierra si cumple y crea la siguiente misión en el mismo job.
+- **Validar progreso de misiones**: escucha `create`, `delete`, `push` a cualquier rama y ejecución manual. En cada ejecución revisa **todas las misiones abiertas**, no solo la que corresponde al evento: como los criterios miran el estado publicado del repositorio y no el evento que los disparó, un estudiante que cree la rama, haga commit y publique todo en un mismo push no se queda atascado. Al cerrar una misión crea la siguiente en el mismo job y la evalúa en cadena, por si el trabajo ya estaba adelantado.
 - **Proteger cierre de misiones**: reabre issues cerrados manualmente y vuelve a cerrar los que ya tenían validación completada.
 - **Validar README**: falla si faltan las secciones obligatorias.
 - **Validar ramas y merges**: revisa evidencia de las tres ramas, commits de fusión, ausencia de marcas de conflicto y presencia de los mensajes esperados. En `push` corre en modo progresivo; en ejecución manual puedes elegir modo final.
@@ -62,6 +62,12 @@ Revisa en su repositorio:
 Ejecución manual de la validación final:
 
 **Actions > Validar ramas y merges > Run workflow > modo: final**
+
+Si un estudiante queda atascado, la vía normal es **Actions > Validar progreso de misiones > Run workflow**: revisa todas las misiones abiertas y avanza si el repositorio ya cumple. Como último recurso, `npm run create:next-issue` crea manualmente la misión siguiente a una dada:
+
+```bash
+CLOSED_MISSION=4 GITHUB_REPOSITORY=usuario/repo GITHUB_TOKEN=token npm run create:next-issue
+```
 
 ## Modificar la práctica
 

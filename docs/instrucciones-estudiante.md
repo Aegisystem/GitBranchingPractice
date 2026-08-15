@@ -73,7 +73,7 @@ Cuando publicas cambios (push, creación o borrado de ramas), el workflow **Vali
 - por qué importa;
 - una checklist con lo que ya cumples y lo que falta.
 
-Si todo cumple, cierra el issue y crea la siguiente misión automáticamente.
+Si todo cumple, cierra el issue y crea la siguiente misión automáticamente. Si te adelantaste y ya cumpliste también la siguiente, puede cerrar varias misiones seguidas: aun así, léelas todas, porque cada una explica algo distinto.
 
 Algunos puntos de la checklist aparecen marcados como _(informativo)_: son observaciones para que aprendas, no bloquean el cierre.
 
@@ -128,9 +128,11 @@ Para resolverlo:
 
 ```bash
 git add src/mensajes.js
-git commit
+git commit --no-edit
 git push origin main
 ```
+
+`--no-edit` acepta el mensaje de fusión que Git ya preparó y evita que se abra un editor en la terminal. Si se te abre `vim` de todos modos, se sale con `:wq` y Enter.
 
 Si te enredas y quieres empezar el merge de nuevo:
 

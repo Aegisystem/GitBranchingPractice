@@ -19,6 +19,7 @@ import {
   MENSAJE_CONFLICTO_RAMA,
   MENSAJE_DESPEDIDA,
   MENSAJE_SALUDO,
+  missions,
   PRACTICE_MARKER
 } from "./practice-missions.js";
 
@@ -76,10 +77,6 @@ function eventName() {
   return process.env.GITHUB_EVENT_NAME || "manual";
 }
 
-function currentRefName(payload) {
-  return process.env.GITHUB_REF_NAME || payload?.ref || "";
-}
-
 export function listBranches() {
   const refs = git([
     "for-each-ref",
@@ -97,10 +94,6 @@ export function listBranches() {
 
 function remoteBranchExists(branches, name) {
   return branches.includes(`origin/${name}`);
-}
-
-function branchExists(branches, name) {
-  return branches.includes(name) || remoteBranchExists(branches, name);
 }
 
 // Preferimos siempre la versión remota: es la que el estudiante realmente publicó.
@@ -214,6 +207,23 @@ function contains(text, fragment) {
   return text.toLowerCase().includes(fragment.toLowerCase());
 }
 
+// Frases propias del README de la plantilla. Si siguen ahí, el estudiante no
+// escribió su propia documentación: la misión 10 no puede darse por cumplida.
+const TEXTO_PLANTILLA_AUTORES = [
+  "Plantilla para estudiantes de Ingeniería de Software",
+  "Docente responsable: ajustar según el curso"
+];
+
+const TEXTO_PLANTILLA_FLUJO = [
+  "flujo mínimo de dos niveles",
+  "Secuencia de las 10 misiones",
+  "Los issues de misión no se cierran manualmente"
+];
+
+function conservaTextoDePlantilla(texto, frases) {
+  return frases.some((frase) => contains(texto, frase));
+}
+
 function hasConflictMarkers(text) {
   return /^(<{7}|={7}|>{7})/m.test(text);
 }
@@ -254,7 +264,9 @@ function validateReadmeQuality(markdown) {
     check(usage.length >= 40, "Uso explica cómo ejecutar el proyecto", "Describe qué hace el proyecto al ejecutarlo."),
     check(/\bnpm\s+(run\s+)?start\b|node\s+src\/app\.js/i.test(usage), "Uso incluye el comando para ejecutar el proyecto", "Agrega el comando `npm start`."),
     check(authors.length >= 10 && !/nombre del integrante|reemplazar/i.test(authors), "Autores identifica a personas reales", "Reemplaza el texto de ejemplo por nombres reales."),
+    check(!conservaTextoDePlantilla(authors, TEXTO_PLANTILLA_AUTORES), "Autores ya no tiene el texto de la plantilla", "Sustituye \"Plantilla para estudiantes...\" y \"Docente responsable...\" por los datos reales de tu grupo."),
     check(flow.length >= 120, "Flujo de trabajo Git tiene una explicación con tus palabras", "Explica el flujo con al menos un párrafo propio."),
+    check(!conservaTextoDePlantilla(flow, TEXTO_PLANTILLA_FLUJO), "Flujo de trabajo Git está reescrito, no es el texto de la plantilla", "Borra la explicación que traía el README y escribe la tuya: qué hiciste tú en cada paso."),
     check(/\bcommit\b/i.test(flow), "Flujo de trabajo Git explica los commits", "Explica qué hace `git commit`."),
     check(/\bpush\b/i.test(flow), "Flujo de trabajo Git explica el push", "Explica qué hace `git push` y en qué se diferencia del commit."),
     check(/\brama|branch\b/i.test(flow), "Flujo de trabajo Git explica las ramas usadas", "Nombra las ramas feature/saludo, feature/despedida y feature/conflicto."),
@@ -294,7 +306,7 @@ export function evaluateMission(mission, issue, context) {
         checks: [
           check(nuevos.length >= 2, `Hay al menos 2 commits nuevos publicados en main (detectados: ${nuevos.length})`, "Haz dos commits separados y súbelos con `git push origin main`."),
           check(
-            nuevos.every((line) => line.split(" ").slice(1).join(" ").trim().length >= 10),
+            nuevos.length > 0 && nuevos.every((line) => line.split(" ").slice(1).join(" ").trim().length >= 10),
             "Los mensajes de commit son descriptivos",
             "Evita mensajes como `x` o `cambios`: describe qué cambió."
           )
@@ -521,45 +533,18 @@ function missionIdFromIssue(issue) {
   return extractMissionId(`${issue.title || ""}\n${issue.body || ""}`);
 }
 
-function targetMissionIds(payload, openIssues) {
-  const event = eventName();
+// Todas las validaciones dependen del estado publicado del repositorio, no del
+// evento que las disparó. Por eso se revisan todas las misiones abiertas: si el
+// estudiante crea la rama, hace commit y publica todo en un solo push, la misión
+// correspondiente igual se evalúa y la práctica no se queda atascada.
+export function targetMissionIds(_payload, openIssues) {
+  const eventosSoportados = ["workflow_dispatch", "push", "create", "delete"];
 
-  if (event === "workflow_dispatch") {
-    return openIssues.map(missionIdFromIssue).filter(Boolean);
+  if (!eventosSoportados.includes(eventName())) {
+    return [];
   }
 
-  if (event === "create" && payload?.ref_type === "branch") {
-    const branchToMission = new Map([
-      [BRANCH_SALUDO, 3],
-      [BRANCH_DESPEDIDA, 6],
-      [BRANCH_CONFLICTO, 9]
-    ]);
-
-    return branchToMission.has(payload.ref) ? [branchToMission.get(payload.ref)] : [];
-  }
-
-  if (event === "delete" && payload?.ref_type === "branch") {
-    return [8];
-  }
-
-  if (event === "push") {
-    const branch = currentRefName(payload).replace("refs/heads/", "");
-
-    if (branch === "main") {
-      return [1, 2, 5, 8, 9, 10];
-    }
-    if (branch === BRANCH_SALUDO) {
-      return [4];
-    }
-    if (branch === BRANCH_DESPEDIDA) {
-      return [7];
-    }
-    if (branch === BRANCH_CONFLICTO) {
-      return [9];
-    }
-  }
-
-  return [];
+  return openIssues.map(missionIdFromIssue).filter(Boolean);
 }
 
 async function createNextMissionIfNeeded(api, issues, completedMission) {
@@ -599,7 +584,7 @@ async function processMission(context, issue, mission) {
 
   if (!validation.passed) {
     annotateWarnings(mission, validation);
-    return;
+    return { passed: false, nextIssue: null };
   }
 
   await closeIssue(context.api, issue.number);
@@ -609,6 +594,35 @@ async function processMission(context, issue, mission) {
     console.log(`Misión ${mission.id} cerrada. Siguiente issue: #${nextIssue.number}`);
   } else {
     console.log(`Misión ${mission.id} cerrada. No quedan más misiones.`);
+  }
+
+  return { passed: true, nextIssue };
+}
+
+// Si el estudiante adelantó trabajo, la siguiente misión puede estar cumplida en
+// el mismo momento en que se crea. Se evalúa en cadena para que no tenga que
+// esperar otro push solo para desbloquearse.
+export async function processMissionChain(context, startIssue) {
+  let issue = startIssue;
+
+  for (let paso = 0; paso < missions.length && issue; paso += 1) {
+    if (context.processed.has(issue.number)) {
+      return;
+    }
+
+    context.processed.add(issue.number);
+
+    const mission = getMissionById(missionIdFromIssue(issue));
+    if (!mission) {
+      return;
+    }
+
+    const { passed, nextIssue } = await processMission(context, issue, mission);
+    if (!passed || !nextIssue || nextIssue.state === "closed") {
+      return;
+    }
+
+    issue = nextIssue;
   }
 }
 
@@ -637,21 +651,16 @@ async function main() {
     api,
     payload,
     issues,
-    branches: listBranches()
+    branches: listBranches(),
+    processed: new Set()
   };
 
   for (const issue of openMissionIssues) {
-    const missionId = missionIdFromIssue(issue);
-    if (!targets.has(missionId)) {
+    if (!targets.has(missionIdFromIssue(issue))) {
       continue;
     }
 
-    const mission = getMissionById(missionId);
-    if (!mission) {
-      continue;
-    }
-
-    await processMission(context, issue, mission);
+    await processMissionChain(context, issue);
   }
 }
 
