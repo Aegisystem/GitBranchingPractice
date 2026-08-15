@@ -29,14 +29,16 @@ No se requieren secretos externos ni dependencias de npm: los scripts usan solo 
 | 2 | Publicar varios commits | ≥ 2 commits nuevos en `main` desde que se creó la misión, con mensajes descriptivos |
 | 3 | Crear `feature/saludo` | La rama existe en el remoto |
 | 4 | Commits en la rama | `src/mensajes.js` de la rama contiene el mensaje de saludo |
-| 5 | Merge de `feature/saludo` | Los commits están en `main` y el mensaje aparece allí |
+| 5 | Merge de `feature/saludo` | Los commits están en `main` y el mensaje aparece allí (fast-forward) |
 | 6 | Crear `feature/despedida` | La rama existe y ya incluye el saludo (nació de `main` actualizado) |
 | 7 | Commit en la segunda rama | La rama contiene el mensaje de despedida |
-| 8 | Merge y limpieza | `main` tiene ambos mensajes y `origin/feature/saludo` ya no existe |
+| 8 | Merge y navegación entre ramas | `main` tiene ambos mensajes integrados |
 | 9 | Conflicto resuelto | `main` conserva los dos mensajes del conflicto y no quedan marcas `<<<<<<<` |
 | 10 | README documentado | Estructura obligatoria + explicación de commit, push, ramas, merge y conflicto |
 
-La misión 5 comprueba el uso de `--no-ff` como criterio **informativo**, no bloqueante: si el estudiante hace un fast-forward, la checklist se lo explica pero no lo deja atascado.
+La práctica se limita a los comandos vistos en clase: `git add .`, `git commit -m`, `git push`, `git checkout -b`, `git checkout` y `git merge`. No usa `-u`/`--set-upstream` (se asume `push.autoSetupRemote` configurado, y la misión 3 explica cómo activarlo), ni `--no-ff`, ni `git pull` (nadie más escribe en el remoto), ni borrado de ramas.
+
+Como los merges se hacen sin `--no-ff`, los de las misiones 5 y 8 son *fast-forward* y no dejan commit de fusión: los diagramas y la checklist lo explican como parte del contenido. El único commit de fusión del historial aparece en la misión 9, y es justamente el que hace visible qué es una fusión real.
 
 ## Interpretar los workflows
 
@@ -55,7 +57,7 @@ Revisa en su repositorio:
 - Issues creados y cerrados en orden, con los comentarios del workflow.
 - Historial de `main`: `git log --oneline --graph --all`.
 - Presencia de commits de fusión (evidencia de merges reales, no de ediciones directas).
-- Que `feature/saludo` haya sido borrada y `feature/despedida` / `feature/conflicto` sigan visibles o registradas en el historial.
+- Que existan las tres ramas y que sus puntas muestren dónde se quedó cada una.
 - Que `src/mensajes.js` en `main` tenga los cuatro mensajes y ninguna marca de conflicto.
 - README final con estructura y explicación propia.
 
@@ -95,6 +97,6 @@ Ten en cuenta el alcance real: son instrucciones que el asistente lee y normalme
 
 - 25% commits publicados con mensajes claros (misiones 1 y 2).
 - 25% creación y uso correcto de ramas (misiones 3, 4, 6 y 7).
-- 25% merges correctos y limpieza de ramas (misiones 5 y 8).
+- 25% merges correctos y navegación entre ramas (misiones 5 y 8).
 - 15% resolución del conflicto (misión 9).
 - 10% README y explicación del flujo (misión 10).

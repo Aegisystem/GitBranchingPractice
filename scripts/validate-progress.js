@@ -270,7 +270,7 @@ function validateReadmeQuality(markdown) {
     check(/\bcommit\b/i.test(flow), "Flujo de trabajo Git explica los commits", "Explica qué hace `git commit`."),
     check(/\bpush\b/i.test(flow), "Flujo de trabajo Git explica el push", "Explica qué hace `git push` y en qué se diferencia del commit."),
     check(/\brama|branch\b/i.test(flow), "Flujo de trabajo Git explica las ramas usadas", "Nombra las ramas feature/saludo, feature/despedida y feature/conflicto."),
-    check(/\bmerge\b/i.test(flow), "Flujo de trabajo Git explica el merge", "Explica qué hace `git merge` y por qué usaste `--no-ff`."),
+    check(/\bmerge\b/i.test(flow), "Flujo de trabajo Git explica el merge", "Explica qué hace `git merge` y qué diferencia notaste entre los merges de las misiones 5 y 8 y el de la 9."),
     check(/conflicto/i.test(flow), "Flujo de trabajo Git explica el conflicto resuelto", "Cuenta cómo apareció el conflicto y cómo lo resolviste.")
   ];
 }
@@ -292,7 +292,7 @@ export function evaluateMission(mission, issue, context) {
         mission,
         checks: [
           check(Boolean(bitacora), `${BITACORA_PATH} existe en main`, "No borres el archivo de bitácora."),
-          check(entries.length >= 1, "La bitácora tiene una línea escrita por ti", "Reemplaza la línea de ejemplo por una con tu nombre y publícala con `git push origin main`."),
+          check(entries.length >= 1, "La bitácora tiene una línea escrita por ti", "Reemplaza la línea de ejemplo por una con tu nombre, haz commit y publícala con `git push`."),
           check(entries.some((line) => line.trim().length >= 15), "La línea de la bitácora tiene contenido real", "Escribe nombre y qué hiciste, no solo un guion.")
         ]
       });
@@ -304,7 +304,7 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(nuevos.length >= 2, `Hay al menos 2 commits nuevos publicados en main (detectados: ${nuevos.length})`, "Haz dos commits separados y súbelos con `git push origin main`."),
+          check(nuevos.length >= 2, `Hay al menos 2 commits nuevos publicados en main (detectados: ${nuevos.length})`, "Haz dos commits separados, cada uno con su `git commit -m`, y súbelos con `git push`."),
           check(
             nuevos.length > 0 && nuevos.every((line) => line.split(" ").slice(1).join(" ").trim().length >= 10),
             "Los mensajes de commit son descriptivos",
@@ -318,7 +318,7 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(remoteBranchExists(branches, BRANCH_SALUDO), `Existe la rama ${BRANCH_SALUDO} en GitHub`, `Crea la rama con \`git checkout -b ${BRANCH_SALUDO}\` y publícala con \`git push -u origin ${BRANCH_SALUDO}\`.`)
+          check(remoteBranchExists(branches, BRANCH_SALUDO), `Existe la rama ${BRANCH_SALUDO} en GitHub`, `Crea la rama con \`git checkout -b ${BRANCH_SALUDO}\` y publícala con \`git push\`.`)
         ]
       });
 
@@ -329,7 +329,7 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(Boolean(ref), `La rama ${BRANCH_SALUDO} está publicada`, `Publica la rama con \`git push -u origin ${BRANCH_SALUDO}\`.`),
+          check(Boolean(ref), `La rama ${BRANCH_SALUDO} está publicada`, `Publica la rama con \`git push\`.`),
           check(contains(mensajes, MENSAJE_SALUDO), `${MENSAJES_PATH} contiene "${MENSAJE_SALUDO}" en la rama`, "Agrega el mensaje exacto al arreglo, haz commit y push."),
           check(!hasConflictMarkers(mensajes), "El archivo no tiene marcas de conflicto", "Elimina las líneas `<<<<<<<`, `=======` y `>>>>>>>`."),
           check(!contains(mainMensajes, MENSAJE_SALUDO), "main todavía no tiene el mensaje: la rama aísla tu trabajo", "", { soft: true })
@@ -345,10 +345,17 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(integrada, `Los commits de ${BRANCH_SALUDO} están en main`, `Fusiona con \`git merge --no-ff ${BRANCH_SALUDO}\` y publica con \`git push origin main\`.`),
+          check(integrada, `Los commits de ${BRANCH_SALUDO} están en main`, `Desde main, fusiona con \`git merge ${BRANCH_SALUDO}\` y publica con \`git push\`.`),
           check(contains(mainMensajes, MENSAJE_SALUDO), `main contiene "${MENSAJE_SALUDO}"`, "Verifica que el merge se publicó en main."),
           check(!hasConflictMarkers(mainMensajes), "main no tiene marcas de conflicto", "Resuelve el conflicto antes de publicar."),
-          check(mergeCommitJoins(mainRef, tip), "El merge dejó un commit de fusión (--no-ff)", "Si el merge fue fast-forward no queda rastro de la rama. Usa `--no-ff` en los siguientes merges.", { soft: true })
+          check(
+            integrada,
+            mergeCommitJoins(mainRef, tip)
+              ? "El merge creó un commit de fusión, porque main también había avanzado"
+              : "El merge fue fast-forward: main no había cambiado, así que Git solo lo adelantó hasta tu commit",
+            "",
+            { soft: true }
+          )
         ]
       });
     }
@@ -360,8 +367,8 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(remoteBranchExists(branches, BRANCH_DESPEDIDA), `Existe la rama ${BRANCH_DESPEDIDA} en GitHub`, `Crea la rama y publícala con \`git push -u origin ${BRANCH_DESPEDIDA}\`.`),
-          check(contains(mensajes, MENSAJE_SALUDO), "La rama nació de un main actualizado", "Actualiza main con `git pull origin main` antes de crear la rama, o rehaz la rama desde main.")
+          check(remoteBranchExists(branches, BRANCH_DESPEDIDA), `Existe la rama ${BRANCH_DESPEDIDA} en GitHub`, `Crea la rama con \`git checkout -b ${BRANCH_DESPEDIDA}\` y publícala con \`git push\`.`),
+          check(contains(mensajes, MENSAJE_SALUDO), "La rama nació del main que ya tiene el saludo", "Vuelve a main con `git checkout main` y crea la rama desde ahí con `git checkout -b feature/despedida`.")
         ]
       });
     }
@@ -373,7 +380,7 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(Boolean(ref), `La rama ${BRANCH_DESPEDIDA} está publicada`, `Publica la rama con \`git push -u origin ${BRANCH_DESPEDIDA}\`.`),
+          check(Boolean(ref), `La rama ${BRANCH_DESPEDIDA} está publicada`, `Publica la rama con \`git push\`.`),
           check(contains(mensajes, MENSAJE_DESPEDIDA), `${MENSAJES_PATH} contiene "${MENSAJE_DESPEDIDA}" en la rama`, "Agrega el mensaje exacto, haz commit y push."),
           check(!hasConflictMarkers(mensajes), "El archivo no tiene marcas de conflicto", "Elimina las marcas de conflicto antes de publicar.")
         ]
@@ -388,9 +395,15 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(integrada, `Los commits de ${BRANCH_DESPEDIDA} están en main`, `Fusiona con \`git merge --no-ff ${BRANCH_DESPEDIDA}\` y publica main.`),
+          check(integrada, `Los commits de ${BRANCH_DESPEDIDA} están en main`, `Desde main, fusiona con \`git merge ${BRANCH_DESPEDIDA}\` y publica con \`git push\`.`),
           check(contains(mainMensajes, MENSAJE_SALUDO) && contains(mainMensajes, MENSAJE_DESPEDIDA), "main contiene los dos mensajes integrados", "Revisa que ambos merges estén publicados en main."),
-          check(!remoteBranchExists(branches, BRANCH_SALUDO), `La rama remota ${BRANCH_SALUDO} ya fue eliminada`, `Bórrala con \`git push origin --delete ${BRANCH_SALUDO}\` una vez fusionada.`)
+          check(
+            contains(fileAtRef(refFor(branches, BRANCH_SALUDO), MENSAJES_PATH), MENSAJE_SALUDO)
+              && !contains(fileAtRef(refFor(branches, BRANCH_SALUDO), MENSAJES_PATH), MENSAJE_DESPEDIDA),
+            `${BRANCH_SALUDO} se quedó donde la dejaste: tiene el saludo pero no la despedida`,
+            "",
+            { soft: true }
+          )
         ]
       });
     }
@@ -403,11 +416,11 @@ export function evaluateMission(mission, issue, context) {
       return result({
         mission,
         checks: [
-          check(tieneRama, `Existe o existió la rama ${BRANCH_CONFLICTO}`, `Crea la rama con \`git checkout -b ${BRANCH_CONFLICTO}\` y publícala.`),
+          check(tieneRama, `Existe o existió la rama ${BRANCH_CONFLICTO}`, `Crea la rama con \`git checkout -b ${BRANCH_CONFLICTO}\` y publícala con \`git push\`.`),
           check(contains(mainMensajes, MENSAJE_CONFLICTO_MAIN), `main conserva "${MENSAJE_CONFLICTO_MAIN}"`, "Al resolver el conflicto debes conservar el cambio hecho en main."),
           check(contains(mainMensajes, MENSAJE_CONFLICTO_RAMA), `main conserva "${MENSAJE_CONFLICTO_RAMA}"`, "Al resolver el conflicto debes conservar también el cambio de la rama."),
           check(!hasConflictMarkers(mainMensajes), "No quedan marcas de conflicto en el archivo", "Borra `<<<<<<<`, `=======` y `>>>>>>>` antes de hacer commit."),
-          check(isAncestor(tip, mainRef), `El merge de ${BRANCH_CONFLICTO} quedó registrado en el historial de main`, "Publica el merge resuelto con `git push origin main`.", { soft: !tip })
+          check(isAncestor(tip, mainRef), `El merge de ${BRANCH_CONFLICTO} quedó registrado en el historial de main`, "Publica el merge resuelto con `git push`.", { soft: !tip })
         ]
       });
     }

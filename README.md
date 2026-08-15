@@ -8,7 +8,7 @@ Repositorio plantilla para una práctica guiada de Git centrada en cuatro operac
 
 La práctica crea issues progresivos en GitHub. Cada issue explica una misión, y un workflow revisa el repositorio, comenta qué falta, cierra la misión cuando se cumple el criterio y crea la siguiente.
 
-Es la versión introductoria de la práctica de Git Flow: aquí no hay Pull Requests, releases, tags ni hotfixes.
+Es la versión introductoria de la práctica de Git Flow: aquí no hay Pull Requests, releases, tags ni hotfixes. Todo se resuelve con seis comandos: `git add .`, `git commit -m`, `git push`, `git checkout -b`, `git checkout` y `git merge`.
 
 El proyecto base es un programa mínimo en Node.js que imprime una lista de mensajes. Cada misión agrega una línea a esa lista, y eso permite provocar un conflicto de merge real.
 
@@ -59,7 +59,7 @@ BRANCHING_STRICT_FINAL=false npm run validate:branching
 La práctica usa un flujo mínimo de dos niveles:
 
 - `main`: rama estable donde se integra todo.
-- `feature/saludo`: primera rama de trabajo, se fusiona y luego se borra.
+- `feature/saludo`: primera rama de trabajo, se fusiona con un merge fast-forward.
 - `feature/despedida`: segunda rama, creada desde un `main` ya actualizado.
 - `feature/conflicto`: rama que cambia la misma línea que `main` para provocar y resolver un conflicto.
 
@@ -69,10 +69,10 @@ Secuencia de las 10 misiones:
 2. Publicar varios commits pequeños con `git push`.
 3. Crear y publicar `feature/saludo`.
 4. Hacer commits dentro de la rama, sin tocar `main`.
-5. Fusionar `feature/saludo` en `main` con `git merge --no-ff`.
+5. Fusionar `feature/saludo` en `main` con `git merge`.
 6. Crear `feature/despedida` desde un `main` actualizado.
 7. Hacer commit y push en la segunda rama.
-8. Fusionarla y borrar la rama ya integrada.
+8. Fusionar la segunda rama y moverse entre ramas con `git checkout`.
 9. Provocar un conflicto y resolverlo conservando ambos cambios.
 10. Documentar el flujo en el README.
 

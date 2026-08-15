@@ -99,7 +99,7 @@ function main() {
   if (mergeCommits) {
     console.log(`[OK] main tiene commits de fusión:\n${mergeCommits.split(/\r?\n/).map((line) => `    ${line}`).join("\n")}`);
   } else if (strictFinalValidation) {
-    failures.push("main no tiene ningún commit de fusión. Usa `git merge --no-ff` para dejar rastro de las integraciones.");
+    failures.push("main no tiene ningún commit de fusión. Debería haber uno: el que cierra el conflicto de la misión 9.");
   } else {
     warnings.push("main aún no tiene commits de fusión.");
   }

@@ -13,18 +13,26 @@ No se usan Pull Requests, releases ni tags: eso pertenece a la práctica de Git 
 
 ## Conceptos mínimos
 
+Toda la práctica se hace con los comandos que ya viste en clase:
+
 | Comando | Qué hace |
 | --- | --- |
-| `git status` | Muestra en qué rama estás y qué cambios tienes sin guardar. |
-| `git add <archivo>` | Marca un cambio para incluirlo en el próximo commit. |
-| `git commit -m "mensaje"` | Guarda los cambios marcados en el historial **local**. |
-| `git push origin <rama>` | Publica los commits locales en GitHub. |
-| `git checkout -b <rama>` | Crea una rama y se cambia a ella. |
-| `git branch --show-current` | Dice en qué rama estás parado. |
-| `git merge --no-ff <rama>` | Integra otra rama en la rama actual dejando un commit de fusión. |
-| `git log --oneline --graph` | Dibuja el historial y deja ver las ramas y los merges. |
+| `git add .` | Marca todos tus cambios para incluirlos en el próximo commit. |
+| `git commit -m "Mensaje"` | Guarda los cambios marcados en el historial **local**. |
+| `git push` | Publica en GitHub los commits de la rama en la que estás. |
+| `git checkout -b ramaNueva` | Crea una rama y se cambia a ella. |
+| `git checkout rama` | Se cambia a una rama que ya existe. |
+| `git merge rama` | Trae a la rama actual el trabajo de otra rama. |
 
-Regla que evita el 90% de los problemas: **antes de hacer cualquier cosa, ejecuta `git status` y `git branch --show-current`.**
+No necesitas ningún comando más. Estos otros solo **miran** el repositorio, no lo modifican, y puedes usarlos cuando quieras para orientarte:
+
+| Comando de consulta | Qué muestra |
+| --- | --- |
+| `git status` | En qué rama estás y qué cambios tienes sin guardar. |
+| `git log --oneline --graph` | El historial dibujado, con sus ramas y merges. |
+| `git branch` | La lista de ramas, con un asterisco en la actual. |
+
+Regla que evita el 90% de los problemas: **antes de hacer cualquier cosa, ejecuta `git status`.**
 
 ## Preparar el repositorio
 
@@ -42,7 +50,10 @@ git status
 ```bash
 git config --global user.name "Tu Nombre"
 git config --global user.email "tu-correo@ejemplo.com"
+git config --global push.autoSetupRemote true
 ```
+
+La tercera línea es la que permite que `git push`, a secas, publique también las ramas nuevas. Si algún push te responde `has no upstream branch`, es que falta esa configuración: actívala y repite el `git push`.
 
 4. Ejecuta el proyecto para ver qué imprime:
 
@@ -85,15 +96,15 @@ Si te quedas atascado en una misión, puedes forzar una revisión desde **Action
 
 | # | Misión | Practica |
 | --- | --- | --- |
-| 1 | Primer commit en `main` | `add`, `commit`, `push` |
+| 1 | Primer commit en `main` | `git add .`, `git commit -m`, `git push` |
 | 2 | Publicar varios commits | commits pequeños y descriptivos |
-| 3 | Crear y publicar `feature/saludo` | `checkout -b`, `push -u` |
+| 3 | Crear y publicar `feature/saludo` | `git checkout -b` |
 | 4 | Commits dentro de la rama | aislamiento del trabajo |
-| 5 | Fusionar `feature/saludo` en `main` | `merge --no-ff` |
-| 6 | Crear `feature/despedida` desde `main` actualizado | `pull` antes de ramificar |
+| 5 | Fusionar `feature/saludo` en `main` | `git merge` (fast-forward) |
+| 6 | Crear `feature/despedida` desde `main` | volver a `main` antes de ramificar |
 | 7 | Commit y push en la segunda rama | repetición del ciclo |
-| 8 | Fusionar y borrar la rama integrada | `branch -d`, `push origin --delete` |
-| 9 | Provocar y resolver un conflicto | resolución de conflictos |
+| 8 | Fusionar y moverse entre ramas | `git merge` y `git checkout rama` |
+| 9 | Provocar y resolver un conflicto | merge con commit de fusión |
 | 10 | Documentar el flujo en el README | comunicación técnica |
 
 ## Los mensajes exactos importan
@@ -127,14 +138,14 @@ Para resolverlo:
 4. Cierra el merge:
 
 ```bash
-git add src/mensajes.js
-git commit --no-edit
-git push origin main
+git add .
+git commit -m "Resuelve el conflicto conservando ambos mensajes"
+git push
 ```
 
-`--no-edit` acepta el mensaje de fusión que Git ya preparó y evita que se abra un editor en la terminal. Si se te abre `vim` de todos modos, se sale con `:wq` y Enter.
+Es el mismo ciclo de siempre. Si escribes `git commit` sin `-m`, Git abrirá un editor en la terminal con un mensaje ya escrito: si es `vim`, se sale con `:wq` y Enter.
 
-Si te enredas y quieres empezar el merge de nuevo:
+Si te enredas y prefieres empezar el merge de nuevo, este comando lo cancela y te deja como antes de intentarlo:
 
 ```bash
 git merge --abort
@@ -157,12 +168,13 @@ BRANCHING_STRICT_FINAL=false npm run validate:branching
 
 | Mensaje de Git | Qué significa | Qué hacer |
 | --- | --- | --- |
-| `Updates were rejected because the remote contains work...` | El remoto tiene commits que tú no tienes. | `git pull origin main` y vuelve a hacer push. |
-| `fatal: not a git repository` | No estás dentro de la carpeta del repositorio. | `cd` a la carpeta clonada. |
+| `has no upstream branch` | Estás publicando una rama nueva y falta la configuración de push. | Ejecuta `git config --global push.autoSetupRemote true` y repite `git push`. |
+| `fatal: not a git repository` | No estás dentro de la carpeta del repositorio. | Entra a la carpeta que clonaste. |
 | `Please tell me who you are` | Falta configurar tu identidad. | Ejecuta los `git config --global` de arriba. |
-| `error: Your local changes would be overwritten` | Tienes cambios sin guardar y quieres cambiar de rama. | Haz commit de lo que sirve o descártalo. |
+| `nothing to commit, working tree clean` | No hay cambios que guardar. | Edita y guarda el archivo antes de `git add .`. |
+| `error: Your local changes would be overwritten` | Tienes cambios sin guardar y quieres cambiar de rama. | Haz `git add .` y `git commit -m "..."` antes del `git checkout`. |
 | `CONFLICT (content): Merge conflict in ...` | Dos ramas cambiaron la misma línea. | Resuelve el conflicto como se explica arriba. |
-| `error: The branch 'x' is not fully merged` | Intentas borrar una rama sin fusionar. | Fusiónala primero, o usa `-D` si de verdad quieres descartarla. |
+| `Already up to date` | La rama que fusionas ya estaba integrada. | No hay nada que hacer: revisa con `git log --oneline --graph`. |
 
 ## Sobre usar IA en esta práctica
 
