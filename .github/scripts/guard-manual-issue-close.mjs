@@ -7,8 +7,8 @@ import {
   listIssueComments,
   reopenIssue,
   upsertIssueComment
-} from "./github-api.js";
-import { extractMissionId, getMissionById, PRACTICE_MARKER } from "./practice-missions.js";
+} from "./github-api.mjs";
+import { extractMissionId, getMissionById, PRACTICE_MARKER } from "./practice-missions.mjs";
 
 const COMMENT_MARKER = `<!-- ${PRACTICE_MARKER}:manual-close-guard -->`;
 const ACTIONS_BOT = "github-actions[bot]";

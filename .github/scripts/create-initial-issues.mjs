@@ -1,5 +1,5 @@
-import { createMissionIssue, findMissionIssue, getRepositoryFromEnv, getTokenFromEnv, GitHubApi, listAllIssues } from "./github-api.js";
-import { getMissionById } from "./practice-missions.js";
+import { createMissionIssue, findMissionIssue, getRepositoryFromEnv, getTokenFromEnv, GitHubApi, listAllIssues } from "./github-api.mjs";
+import { getMissionById } from "./practice-missions.mjs";
 
 async function main() {
   const firstMissionId = Number(process.env.FIRST_MISSION_ID || "1");

@@ -10,7 +10,7 @@ import {
   listAllIssues,
   reopenIssue,
   upsertIssueComment
-} from "./github-api.js";
+} from "./github-api.mjs";
 import {
   extractMissionId,
   getMissionById,
@@ -21,20 +21,10 @@ import {
   MENSAJE_SALUDO,
   missions,
   PRACTICE_MARKER
-} from "./practice-missions.js";
+} from "./practice-missions.mjs";
 
-const REQUIRED_SECTIONS = [
-  { level: 1, text: "Nombre del Proyecto" },
-  { level: 2, text: "Descripción" },
-  { level: 2, text: "Instalación" },
-  { level: 2, text: "Uso" },
-  { level: 2, text: "Autores" },
-  { level: 2, text: "Flujo de trabajo Git" }
-];
-
-const MENSAJES_PATH = "src/mensajes.js";
-const BITACORA_PATH = "docs/bitacora.md";
-const README_PATH = "README.md";
+const MENSAJES_PATH = "mensajes.txt";
+const BITACORA_PATH = "bitacora.md";
 
 const BRANCH_SALUDO = "feature/saludo";
 const BRANCH_DESPEDIDA = "feature/despedida";
@@ -157,71 +147,12 @@ function commitsSince(ref, isoDate, { noMerges = true } = {}) {
     .filter(Boolean);
 }
 
-function stripFencedCodeBlocks(markdown) {
-  let insideFence = false;
-
-  return markdown
-    .split(/\r?\n/)
-    .map((line) => {
-      if (/^\s*(```|~~~)/.test(line)) {
-        insideFence = !insideFence;
-        return "";
-      }
-
-      return insideFence ? "" : line;
-    })
-    .join("\n");
-}
-
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function hasHeading(markdown, section) {
-  const hashes = "#".repeat(section.level);
-  const pattern = new RegExp(`^${hashes}\\s+${escapeRegExp(section.text)}\\s*#*\\s*$`, "im");
-  return pattern.test(markdown);
-}
-
-function sectionContent(markdown, headingText) {
-  const lines = markdown.split(/\r?\n/);
-  const headingPattern = new RegExp(`^##\\s+${escapeRegExp(headingText)}\\s*#*\\s*$`, "i");
-  const start = lines.findIndex((line) => headingPattern.test(line));
-
-  if (start === -1) {
-    return "";
-  }
-
-  const collected = [];
-  for (let index = start + 1; index < lines.length; index += 1) {
-    if (/^#{1,2}\s+/.test(lines[index])) {
-      break;
-    }
-    collected.push(lines[index]);
-  }
-
-  return collected.join("\n").trim();
-}
-
 function contains(text, fragment) {
   return text.toLowerCase().includes(fragment.toLowerCase());
-}
-
-// Frases propias del README de la plantilla. Si siguen ahí, el estudiante no
-// escribió su propia documentación: la misión 10 no puede darse por cumplida.
-const TEXTO_PLANTILLA_AUTORES = [
-  "Plantilla para estudiantes de Ingeniería de Software",
-  "Docente responsable: ajustar según el curso"
-];
-
-const TEXTO_PLANTILLA_FLUJO = [
-  "flujo mínimo de dos niveles",
-  "Secuencia de las 10 misiones",
-  "Los issues de misión no se cierran manualmente"
-];
-
-function conservaTextoDePlantilla(texto, frases) {
-  return frases.some((frase) => contains(texto, frase));
 }
 
 function hasConflictMarkers(text) {
@@ -240,38 +171,49 @@ function result({ mission, checks, passed }) {
   return { mission, checks, passed: computed };
 }
 
-function validateReadmeStructure(markdown) {
-  const cleanMarkdown = stripFencedCodeBlocks(markdown);
+// La reflexión final va en `## Lo que aprendí` de la bitácora.
+const TEXTO_PLANTILLA_BITACORA = [
+  "Esta sección la completas en la última misión",
+  "Línea de ejemplo de la plantilla",
+  "Nombre del estudiante"
+];
 
-  return REQUIRED_SECTIONS.map((section) => {
-    const marker = `${"#".repeat(section.level)} ${section.text}`;
-    return check(
-      hasHeading(cleanMarkdown, section),
-      `${marker} existe`,
-      `Agrega el encabezado exacto \`${marker}\`.`
-    );
-  });
+function seccionBitacora(markdown, titulo) {
+  const lineas = markdown.split(/\r?\n/);
+  const patron = new RegExp(`^##\\s+${escapeRegExp(titulo)}\\s*#*\\s*$`, "i");
+  const inicio = lineas.findIndex((linea) => patron.test(linea));
+
+  if (inicio === -1) {
+    return "";
+  }
+
+  const recogidas = [];
+  for (let indice = inicio + 1; indice < lineas.length; indice += 1) {
+    if (/^#{1,2}\s+/.test(lineas[indice])) {
+      break;
+    }
+    recogidas.push(lineas[indice]);
+  }
+
+  return recogidas.join("\n").trim();
 }
 
-function validateReadmeQuality(markdown) {
-  const installation = sectionContent(markdown, "Instalación");
-  const usage = sectionContent(markdown, "Uso");
-  const authors = sectionContent(markdown, "Autores");
-  const flow = sectionContent(markdown, "Flujo de trabajo Git");
+function validateReflexion(bitacora) {
+  const reflexion = seccionBitacora(bitacora, "Lo que aprendí");
 
   return [
-    check(/node\.?js|node\s+20/i.test(installation), "Instalación menciona Node.js", "Indica que se necesita Node.js 20 o superior."),
-    check(usage.length >= 40, "Uso explica cómo ejecutar el proyecto", "Describe qué hace el proyecto al ejecutarlo."),
-    check(/\bnpm\s+(run\s+)?start\b|node\s+src\/app\.js/i.test(usage), "Uso incluye el comando para ejecutar el proyecto", "Agrega el comando `npm start`."),
-    check(authors.length >= 10 && !/nombre del integrante|reemplazar/i.test(authors), "Autores identifica a personas reales", "Reemplaza el texto de ejemplo por nombres reales."),
-    check(!conservaTextoDePlantilla(authors, TEXTO_PLANTILLA_AUTORES), "Autores ya no tiene el texto de la plantilla", "Sustituye \"Plantilla para estudiantes...\" y \"Docente responsable...\" por los datos reales de tu grupo."),
-    check(flow.length >= 120, "Flujo de trabajo Git tiene una explicación con tus palabras", "Explica el flujo con al menos un párrafo propio."),
-    check(!conservaTextoDePlantilla(flow, TEXTO_PLANTILLA_FLUJO), "Flujo de trabajo Git está reescrito, no es el texto de la plantilla", "Borra la explicación que traía el README y escribe la tuya: qué hiciste tú en cada paso."),
-    check(/\bcommit\b/i.test(flow), "Flujo de trabajo Git explica los commits", "Explica qué hace `git commit`."),
-    check(/\bpush\b/i.test(flow), "Flujo de trabajo Git explica el push", "Explica qué hace `git push` y en qué se diferencia del commit."),
-    check(/\brama|branch\b/i.test(flow), "Flujo de trabajo Git explica las ramas usadas", "Nombra las ramas feature/saludo, feature/despedida y feature/conflicto."),
-    check(/\bmerge\b/i.test(flow), "Flujo de trabajo Git explica el merge", "Explica qué hace `git merge` y qué diferencia notaste entre los merges de las misiones 5 y 8 y el de la 9."),
-    check(/conflicto/i.test(flow), "Flujo de trabajo Git explica el conflicto resuelto", "Cuenta cómo apareció el conflicto y cómo lo resolviste.")
+    check(Boolean(reflexion), "La sección `## Lo que aprendí` existe en bitacora.md", "No borres el encabezado `## Lo que aprendí`."),
+    check(
+      !TEXTO_PLANTILLA_BITACORA.some((frase) => contains(reflexion, frase)),
+      "La sección ya no tiene el texto de la plantilla",
+      "Borra la línea de ejemplo y escribe tu propia explicación."
+    ),
+    check(reflexion.length >= 200, "La explicación tiene al menos un párrafo propio", "Escribe unas líneas más: responde las cuatro preguntas de la misión."),
+    check(/\bcommit\b/i.test(reflexion), "Explicas qué hace git commit", "Cuenta qué guarda un commit."),
+    check(/\bpush\b/i.test(reflexion), "Explicas qué hace git push", "Cuenta en qué se diferencia el push del commit."),
+    check(/\brama|branch\b/i.test(reflexion), "Explicas para qué usaste las ramas", "Nombra las ramas y di para qué te sirvieron."),
+    check(/\bmerge\b/i.test(reflexion), "Explicas qué hace git merge", "Cuenta qué diferencia viste entre los merges de las misiones 5 y 8 y el de la 9."),
+    check(/conflicto/i.test(reflexion), "Explicas el conflicto y cómo lo resolviste", "Cuenta por qué apareció el conflicto y qué hiciste con las marcas.")
   ];
 }
 
@@ -426,14 +368,13 @@ export function evaluateMission(mission, issue, context) {
     }
 
     case 10: {
-      const readme = fileAtRef(mainRef, README_PATH);
+      const bitacora = fileAtRef(mainRef, BITACORA_PATH);
 
       return result({
         mission,
         checks: [
-          check(Boolean(readme), "README.md existe en main", "Publica el README en main."),
-          ...validateReadmeStructure(readme),
-          ...validateReadmeQuality(readme)
+          check(Boolean(bitacora), `${BITACORA_PATH} existe en main`, "Publica la bitácora en main."),
+          ...validateReflexion(bitacora)
         ]
       });
     }
@@ -679,7 +620,7 @@ async function main() {
 
 // Solo se ejecuta cuando el script es invocado directamente; al importarlo
 // desde una prueba, únicamente se exponen las funciones de validación.
-if (process.argv[1] && process.argv[1].endsWith("validate-progress.js")) {
+if (process.argv[1] && process.argv[1].endsWith("validate-progress.mjs")) {
   main().catch((error) => {
     console.error("No se pudo validar el progreso de la práctica.");
     console.error(error.message);

@@ -31,9 +31,9 @@ Tu commit se suma al final de la línea. Nada se reescribe: el historial solo cr
     body: `## Objetivo
 Crear tu primer commit propio sobre la rama \`main\`.
 
-## Pasos sugeridos
+## Pasos
 - Clona tu repositorio y entra a la carpeta.
-- Configura tu identidad si es la primera vez que usas Git en este equipo:
+- Si es la primera vez que usas Git en este equipo, configúralo:
 
 \`\`\`bash
 git config --global user.name "Tu Nombre"
@@ -41,42 +41,34 @@ git config --global user.email "tu-correo@ejemplo.com"
 git config --global push.autoSetupRemote true
 \`\`\`
 
-La última línea es la que hace que \`git push\` funcione siempre, incluso la primera vez que publicas una rama nueva.
-
-- Edita \`docs/bitacora.md\` y reemplaza la línea de ejemplo por una línea real con tu nombre, por ejemplo:
+- Abre \`bitacora.md\` y reemplaza la línea de ejemplo por una con tu nombre:
 
 \`\`\`text
-- Ana Pérez - Clono el repositorio y empiezo la práctica - 2025-03-10
+- Ana Pérez - Clono el repositorio y empiezo la práctica - 2026-08-15
 \`\`\`
 
-- Revisa qué cambió:
+- Guarda el archivo y mira qué cambió:
 
 \`\`\`bash
 git status
-git diff
 \`\`\`
 
-- Prepara y confirma el cambio:
+- Guarda el cambio en el historial y publícalo:
 
 \`\`\`bash
 git add .
 git commit -m "Agrega mi nombre a la bitacora"
-\`\`\`
-
-- Publica el commit:
-
-\`\`\`bash
 git push
 \`\`\`
 
 ## Criterio de cierre
-El workflow cerrará este issue cuando \`docs/bitacora.md\` esté publicado en \`main\` con una línea real en lugar del texto de ejemplo.`
+El workflow cerrará este issue cuando \`bitacora.md\` esté publicado en \`main\` con una línea real en lugar del texto de ejemplo.`
   },
   {
     id: 2,
     title: "Publicar varios commits con git push",
-    summary: "Harás al menos dos commits pequeños y los subirás al repositorio remoto.",
-    why: "El commit guarda el cambio en tu copia local; el push lo comparte con el remoto. Separar el trabajo en commits pequeños hace que el historial se pueda leer y revertir.",
+    summary: "Harás dos commits pequeños y los subirás juntos a GitHub.",
+    why: "El commit guarda el cambio en tu copia local; el push lo comparte con el remoto. Separar el trabajo en commits pequeños hace que el historial se pueda leer.",
     diagram: `Aquí se ve la diferencia entre tu repositorio local y el remoto (GitHub).
 
 **Antes** — haces dos commits, pero GitHub todavía no los tiene
@@ -98,29 +90,29 @@ El workflow cerrará este issue cuando \`docs/bitacora.md\` esté publicado en \
     body: `## Objetivo
 Practicar el ciclo \`add\` → \`commit\` → \`push\` con más de un cambio.
 
-## Pasos sugeridos
+## Pasos
 - Trabaja en \`main\`.
-- Haz un primer cambio pequeño, por ejemplo una línea nueva en \`docs/bitacora.md\`, y confírmalo:
+- Agrega una línea nueva al \`## Registro\` de \`bitacora.md\` contando qué estás haciendo, guarda y confirma:
 
 \`\`\`bash
 git add .
 git commit -m "Registra el avance de la mision 2"
 \`\`\`
 
-- Haz un segundo cambio distinto, por ejemplo mejorar la \`Descripción\` del \`README.md\`, y confírmalo:
+- Agrega **otra** línea distinta, guarda y haz un segundo commit:
 
 \`\`\`bash
 git add .
-git commit -m "Mejora la descripcion del README"
+git commit -m "Anota una segunda nota en la bitacora"
 \`\`\`
 
-- Revisa tu historial local antes de publicar:
+- Mira tu historial local: los dos commits ya están, pero todavía no en GitHub.
 
 \`\`\`bash
 git log --oneline
 \`\`\`
 
-- Publica los dos commits:
+- Publica los dos de una vez:
 
 \`\`\`bash
 git push
@@ -149,24 +141,24 @@ El workflow cerrará este issue cuando detecte al menos dos commits nuevos publi
                   ^ los dos nombres apuntan al MISMO commit
 \`\`\`
 
-Todavía no hay diferencia de contenido entre las dos ramas. La habrá en la próxima misión, cuando hagas un commit estando parado en \`feature/saludo\`.`,
+Todavía no hay diferencia entre las dos ramas. La habrá en la próxima misión, cuando hagas un commit estando parado en \`feature/saludo\`.`,
     body: `## Objetivo
 Crear la rama \`feature/saludo\` a partir de \`main\` y publicarla.
 
-## Pasos sugeridos
+## Pasos
 - Asegúrate de estar en \`main\`:
 
 \`\`\`bash
 git checkout main
 \`\`\`
 
-- Crea la rama y muévete a ella en un solo comando:
+- Crea la rama y muévete a ella, todo en un comando:
 
 \`\`\`bash
 git checkout -b feature/saludo
 \`\`\`
 
-- Comprueba en qué rama estás:
+- Comprueba dónde estás. El asterisco marca tu rama actual:
 
 \`\`\`bash
 git branch
@@ -179,7 +171,7 @@ git push
 \`\`\`
 
 ## Si el push te da un error
-Si Git responde algo como \`fatal: The current branch feature/saludo has no upstream branch\`, es porque falta la configuración que hicimos al principio. Actívala una sola vez y repite \`git push\`:
+Si Git responde \`fatal: The current branch feature/saludo has no upstream branch\`, falta la configuración del principio. Actívala una sola vez y repite \`git push\`:
 
 \`\`\`bash
 git config --global push.autoSetupRemote true
@@ -191,7 +183,7 @@ El workflow cerrará este issue cuando la rama \`feature/saludo\` exista en GitH
   {
     id: 4,
     title: "Hacer commits dentro de feature/saludo",
-    summary: "Agregarás un mensaje nuevo al proyecto desde tu rama, sin tocar `main`.",
+    summary: "Agregarás una línea al archivo de mensajes desde tu rama, sin tocar `main`.",
     why: "Trabajar dentro de la rama demuestra el aislamiento: `main` no cambia mientras tú experimentas.",
     diagram: `Aquí la rama deja de ser un simple nombre y el historial se separa en dos líneas.
 
@@ -210,41 +202,31 @@ El workflow cerrará este issue cuando la rama \`feature/saludo\` exista en GitH
                        ^ S = "Agrega mensaje de saludo"
 \`\`\`
 
-\`main\` quedó exactamente igual que antes: tu mensaje solo existe en \`feature/saludo\`. En la misión 8 te moverás entre las dos ramas y lo verás con tus propios ojos.`,
+\`main\` quedó exactamente igual que antes: tu línea solo existe en \`feature/saludo\`. En la misión 8 te moverás entre las dos ramas y lo verás con tus propios ojos.`,
     body: `## Objetivo
-Modificar el proyecto desde la rama \`feature/saludo\` y publicar el cambio.
+Modificar \`mensajes.txt\` desde la rama \`feature/saludo\` y publicar el cambio.
 
-## Pasos sugeridos
-- Confirma que estás en la rama correcta:
+## Pasos
+- Confirma que estás en la rama correcta. La primera línea dirá \`On branch feature/saludo\`:
 
 \`\`\`bash
 git status
 \`\`\`
 
-La primera línea te dirá \`On branch feature/saludo\`.
+- Abre \`mensajes.txt\` y agrega **al final** esta línea exacta:
 
-- Edita \`src/mensajes.js\` y agrega esta línea exacta dentro del arreglo:
-
-\`\`\`javascript
-"${MENSAJE_SALUDO}",
+\`\`\`text
+${MENSAJE_SALUDO}
 \`\`\`
 
-- El arreglo debe quedar parecido a esto:
+- El archivo debe quedar así:
 
-\`\`\`javascript
-export const mensajes = [
-  "Mensaje inicial de la plantilla",
-  "${MENSAJE_SALUDO}"
-];
+\`\`\`text
+Mensaje inicial de la plantilla
+${MENSAJE_SALUDO}
 \`\`\`
 
-- Prueba el proyecto localmente:
-
-\`\`\`bash
-npm start
-\`\`\`
-
-- Confirma y publica:
+- Guarda, confirma y publica:
 
 \`\`\`bash
 git add .
@@ -252,7 +234,7 @@ git commit -m "Agrega mensaje de saludo"
 git push
 \`\`\`
 
-- Verifica cómo se separaron las dos ramas:
+- Mira cómo se separaron las dos ramas:
 
 \`\`\`bash
 git log --oneline --graph --all
@@ -283,50 +265,41 @@ El workflow cerrará este issue cuando la rama \`feature/saludo\` contenga el me
               ^ main avanzó hasta S; las dos ramas vuelven a coincidir
 \`\`\`
 
-A esto Git lo llama **fast-forward**: no hay nada que combinar, así que no crea un commit nuevo, solo mueve el puntero. Verás un merge distinto en la misión 9, cuando las dos ramas sí hayan cambiado la misma línea.`,
+A esto Git lo llama **fast-forward**: no hay nada que combinar, así que no crea un commit nuevo, solo mueve el puntero. Verás un merge distinto en la misión 9.`,
     body: `## Objetivo
 Integrar \`feature/saludo\` dentro de \`main\`.
 
-## Pasos sugeridos
-- Cambia a la rama que recibirá los cambios:
+## Pasos
+- Cambia a la rama que va a recibir los cambios:
 
 \`\`\`bash
 git checkout main
 \`\`\`
 
+- Abre \`mensajes.txt\`: verás que aquí todavía falta tu línea de saludo.
 - Fusiona la rama de trabajo:
 
 \`\`\`bash
 git merge feature/saludo
 \`\`\`
 
-- Revisa cómo quedó el historial:
+- Vuelve a abrir \`mensajes.txt\`: ahora sí está el saludo.
+- Mira el historial y publica:
 
 \`\`\`bash
-git log --oneline --graph -10
-\`\`\`
-
-- Comprueba que ahora \`main\` sí tiene el mensaje:
-
-\`\`\`bash
-npm start
-\`\`\`
-
-- Publica el resultado:
-
-\`\`\`bash
+git log --oneline --graph --all
 git push
 \`\`\`
 
 ## Qué dirá Git
-La salida del merge dirá \`Fast-forward\`. Significa que \`main\` no había cambiado desde que creaste la rama, así que Git no tuvo que combinar nada: simplemente adelantó \`main\` hasta tu commit. Es el caso más simple y el más común cuando trabajas tú solo.
+La salida del merge dirá \`Fast-forward\`. Significa que \`main\` no había cambiado desde que creaste la rama, así que Git no tuvo que combinar nada: simplemente adelantó \`main\` hasta tu commit.
 
 ## Criterio de cierre
 El workflow cerrará este issue cuando \`main\` contenga los commits de \`feature/saludo\` y el mensaje de saludo esté publicado en \`main\`.`
   },
   {
     id: 6,
-    title: "Crear la rama feature/despedida desde main actualizado",
+    title: "Crear la rama feature/despedida desde main",
     summary: "Crearás una segunda rama, esta vez partiendo del `main` que ya tiene el saludo integrado.",
     why: "Cada rama nueva debe nacer del `main` más reciente; si parte de un estado viejo, arrastras trabajo repetido y aumentas el riesgo de conflictos.",
     diagram: `Lo importante de esta misión es **desde dónde** nace la rama.
@@ -350,28 +323,24 @@ Por eso la validación revisa que tu rama nueva ya contenga el mensaje de saludo
     body: `## Objetivo
 Crear y publicar la rama \`feature/despedida\` a partir de \`main\`.
 
-## Pasos sugeridos
+## Pasos
 - Vuelve a \`main\` antes de ramificar:
 
 \`\`\`bash
 git checkout main
 \`\`\`
 
-- Crea y publica la rama:
+- Crea la rama y publícala:
 
 \`\`\`bash
 git checkout -b feature/despedida
 git push
 \`\`\`
 
-- Comprueba que la rama ya incluye el saludo integrado en la misión anterior:
-
-\`\`\`bash
-git log --oneline -5
-\`\`\`
+- Abre \`mensajes.txt\`: debe tener ya el mensaje de saludo. Si no lo tiene, creaste la rama desde el sitio equivocado.
 
 ## Criterio de cierre
-El workflow cerrará este issue cuando la rama \`feature/despedida\` exista en GitHub y parta de un \`main\` que ya incluye el merge anterior.`
+El workflow cerrará este issue cuando la rama \`feature/despedida\` exista en GitHub y contenga el saludo integrado en la misión 5.`
   },
   {
     id: 7,
@@ -397,28 +366,30 @@ El workflow cerrará este issue cuando la rama \`feature/despedida\` exista en G
 
 \`main\` vuelve a quedarse quieto mientras tú trabajas. El saludo ya está dentro de \`main\`; la despedida todavía no.`,
     body: `## Objetivo
-Agregar un mensaje nuevo desde \`feature/despedida\`.
+Agregar una línea nueva desde \`feature/despedida\`.
 
-## Pasos sugeridos
-- Confirma la rama actual:
+## Pasos
+- Confirma en qué rama estás:
 
 \`\`\`bash
 git status
 \`\`\`
 
-- Edita \`src/mensajes.js\` y agrega esta línea exacta al final del arreglo:
+- Abre \`mensajes.txt\` y agrega al final esta línea exacta:
 
-\`\`\`javascript
-"${MENSAJE_DESPEDIDA}"
+\`\`\`text
+${MENSAJE_DESPEDIDA}
 \`\`\`
 
-- Revisa el cambio antes de confirmarlo:
+- El archivo debe quedar con tres líneas:
 
-\`\`\`bash
-git diff
+\`\`\`text
+Mensaje inicial de la plantilla
+${MENSAJE_SALUDO}
+${MENSAJE_DESPEDIDA}
 \`\`\`
 
-- Confirma y publica:
+- Guarda, confirma y publica:
 
 \`\`\`bash
 git add .
@@ -451,11 +422,11 @@ El workflow cerrará este issue cuando la rama \`feature/despedida\` contenga el
               ^ main alcanzó a la rama; ambas apuntan al mismo commit
 \`\`\`
 
-Con \`git checkout feature/saludo\` volverás a ver el proyecto como estaba en esa rama (dos mensajes) y con \`git checkout main\` volverás al estado actual (tres mensajes). Los archivos de tu carpeta cambian solos.`,
+Con \`git checkout feature/saludo\` volverás a ver el archivo como estaba en esa rama y con \`git checkout main\` volverás al estado actual. Los archivos de tu carpeta cambian solos.`,
     body: `## Objetivo
 Fusionar \`feature/despedida\` en \`main\` y comprobar, moviéndote entre ramas, qué contiene cada una.
 
-## Pasos sugeridos
+## Pasos
 - Integra la rama:
 
 \`\`\`bash
@@ -464,32 +435,24 @@ git merge feature/despedida
 git push
 \`\`\`
 
-- Comprueba que \`main\` ya tiene los tres mensajes:
-
-\`\`\`bash
-npm start
-\`\`\`
-
-- Muévete a la primera rama y vuelve a ejecutar el proyecto:
+- Abre \`mensajes.txt\`: en \`main\` hay ahora **tres** líneas.
+- Muévete a la primera rama:
 
 \`\`\`bash
 git checkout feature/saludo
-npm start
 \`\`\`
 
-Verás solo dos mensajes: esa rama se quedó donde la dejaste. Abre \`src/mensajes.js\` y compruébalo.
-
-- Vuelve a \`main\`:
+- Vuelve a abrir \`mensajes.txt\` **sin cerrar el editor**: ahora tiene **dos** líneas. Esa rama se quedó donde la dejaste, y Git ha reemplazado el contenido de tu carpeta.
+- Regresa a \`main\` y compruébalo otra vez:
 
 \`\`\`bash
 git checkout main
-npm start
 \`\`\`
 
 - Mira el historial completo:
 
 \`\`\`bash
-git log --oneline --graph
+git log --oneline --graph --all
 \`\`\`
 
 ## Criterio de cierre
@@ -530,16 +493,16 @@ Fíjate en la diferencia con las misiones 5 y 8: allí \`main\` no se había mov
     body: `## Objetivo
 Crear un conflicto real entre \`main\` y \`feature/conflicto\`, y resolverlo conservando ambos cambios.
 
-## Paso 1: crear la rama y cambiar una línea
+## Paso 1: crear la rama y cambiar la primera línea
 \`\`\`bash
 git checkout main
 git checkout -b feature/conflicto
 \`\`\`
 
-En \`src/mensajes.js\`, reemplaza la línea \`"Mensaje inicial de la plantilla"\` por:
+En \`mensajes.txt\`, reemplaza la primera línea, \`Mensaje inicial de la plantilla\`, por:
 
-\`\`\`javascript
-"${MENSAJE_CONFLICTO_RAMA}",
+\`\`\`text
+${MENSAJE_CONFLICTO_RAMA}
 \`\`\`
 
 \`\`\`bash
@@ -548,15 +511,15 @@ git commit -m "Cambia el mensaje inicial desde la rama"
 git push
 \`\`\`
 
-## Paso 2: cambiar la misma línea en main
+## Paso 2: cambiar esa misma línea en main
 \`\`\`bash
 git checkout main
 \`\`\`
 
-En \`src/mensajes.js\`, reemplaza esa misma línea original por:
+En \`mensajes.txt\`, reemplaza esa misma primera línea original por:
 
-\`\`\`javascript
-"${MENSAJE_CONFLICTO_MAIN}",
+\`\`\`text
+${MENSAJE_CONFLICTO_MAIN}
 \`\`\`
 
 \`\`\`bash
@@ -570,50 +533,49 @@ git push
 git merge feature/conflicto
 \`\`\`
 
-Git se detendrá con un mensaje de conflicto. Revisa el estado:
+Git se detendrá y avisará \`CONFLICT\`. Revisa el estado:
 
 \`\`\`bash
 git status
 \`\`\`
 
-El archivo tendrá marcas como estas:
+Abre \`mensajes.txt\`: verás las dos versiones marcadas.
 
 \`\`\`text
 <<<<<<< HEAD
-  "${MENSAJE_CONFLICTO_MAIN}",
+${MENSAJE_CONFLICTO_MAIN}
 =======
-  "${MENSAJE_CONFLICTO_RAMA}",
+${MENSAJE_CONFLICTO_RAMA}
 >>>>>>> feature/conflicto
 \`\`\`
 
 ## Paso 4: resolver conservando ambos mensajes
-Borra las marcas \`<<<<<<<\`, \`=======\` y \`>>>>>>>\` y deja las dos líneas:
+Borra las tres líneas de marcas —\`<<<<<<<\`, \`=======\` y \`>>>>>>>\`— y deja los dos mensajes:
 
-\`\`\`javascript
-  "${MENSAJE_CONFLICTO_MAIN}",
-  "${MENSAJE_CONFLICTO_RAMA}",
+\`\`\`text
+${MENSAJE_CONFLICTO_MAIN}
+${MENSAJE_CONFLICTO_RAMA}
 \`\`\`
 
-Después cierra el merge:
+Guarda y cierra el merge con el ciclo de siempre:
 
 \`\`\`bash
-npm start
 git add .
 git commit -m "Resuelve el conflicto conservando ambos mensajes"
 git push
 \`\`\`
 
-Usa \`git commit -m "..."\` como siempre. Si escribes \`git commit\` sin \`-m\`, Git abrirá un editor en la terminal con un mensaje ya preparado: si es \`vim\`, se sale escribiendo \`:wq\` y Enter.
+Si escribes \`git commit\` sin \`-m\`, Git abrirá un editor en la terminal con un mensaje ya preparado: si es \`vim\`, se sale con \`:wq\` y Enter. Y si prefieres empezar el merge de cero, \`git merge --abort\` lo cancela.
 
 ## Criterio de cierre
 El workflow cerrará este issue cuando \`main\` incluya los commits de \`feature/conflicto\`, contenga los dos mensajes del conflicto y no queden marcas de conflicto en el archivo.`
   },
   {
     id: 10,
-    title: "Documentar el flujo de ramas en el README",
-    summary: "Explicarás en el README cómo trabajaste con commits, push, ramas y merges.",
-    why: "Documentar el flujo permite que otra persona repita el proceso y demuestra que entendiste lo que hiciste, no solo que copiaste comandos.",
-    diagram: `Este es el historial completo que debes ser capaz de explicar con tus palabras:
+    title: "Explicar el flujo en tu bitácora",
+    summary: "Escribirás con tus palabras qué hiciste con commits, push, ramas y merges.",
+    why: "Explicarlo es la prueba de que lo entendiste. Copiar comandos se puede hacer sin comprender nada; contarlo, no.",
+    diagram: `Este es el historial completo que debes ser capaz de explicar:
 
 \`\`\`text
   o---C---D---E---S---P---X-------F---R   (main)
@@ -628,51 +590,40 @@ El workflow cerrará este issue cuando \`main\` incluya los commits de \`feature
 | P | Commit hecho dentro de \`feature/despedida\`, integrado igual |
 | X / Y | Los dos cambios en conflicto: \`X\` en \`main\`, \`Y\` en \`feature/conflicto\` |
 | F | El único commit de fusión del historial: el conflicto que resolviste |
-| R | Este commit: el README documentado |
+| R | Este commit: tu explicación en la bitácora |
 
-Fíjate en que solo hay **una** bifurcación dibujada. Los merges de las misiones 5 y 8 fueron fast-forward y por eso el historial ahí es una línea recta: no había dos versiones que combinar. Ejecuta \`git log --oneline --graph\` y compáralo.`,
+Fíjate en que solo hay **una** bifurcación. Los merges de las misiones 5 y 8 fueron fast-forward y por eso el historial ahí es una línea recta. Ejecuta \`git log --oneline --graph --all\` y compáralo.`,
     body: `## Objetivo
-Dejar el \`README.md\` completo, con la estructura obligatoria y una explicación real del flujo de trabajo usado.
+Completar la sección \`## Lo que aprendí\` de \`bitacora.md\` con tu explicación del flujo.
 
-## Pasos sugeridos
-- Trabaja en \`main\` con el repositorio actualizado.
-- Asegúrate de que el \`README.md\` tenga estos encabezados exactos:
+## Pasos
+- Asegúrate de estar en \`main\`:
 
-\`\`\`markdown
-# Nombre del Proyecto
-## Descripción
-## Instalación
-## Uso
-## Autores
-## Flujo de trabajo Git
+\`\`\`bash
+git checkout main
 \`\`\`
 
-- En \`Instalación\`, indica que se necesita Node.js 20 o superior.
-- En \`Uso\`, explica cómo ejecutar el proyecto con \`npm start\` y qué imprime.
-- En \`Autores\`, borra el texto de la plantilla y escribe los nombres reales de integrantes, curso o grupo.
-- **Borra la explicación que trae la plantilla en \`Flujo de trabajo Git\` y escribe la tuya.** La validación rechaza el texto original: lo que se evalúa es que expliques lo que hiciste tú.
-- En \`Flujo de trabajo Git\`, explica con tus palabras:
-  - qué hace \`git commit\` y qué hace \`git push\`;
-  - para qué sirvieron las ramas \`feature/saludo\`, \`feature/despedida\` y \`feature/conflicto\`;
-  - qué hace \`git merge\` y qué diferencia notaste entre los merges de las misiones 5 y 8 y el de la misión 9;
-  - cómo resolviste el conflicto.
-- Publica el cambio:
+- Borra la línea de ejemplo de \`## Lo que aprendí\` y escribe **con tus palabras** al menos un párrafo que responda:
+  - ¿Qué hace \`git commit\` y qué hace \`git push\`? ¿En qué se diferencian?
+  - ¿Para qué te sirvieron las ramas \`feature/saludo\`, \`feature/despedida\` y \`feature/conflicto\`?
+  - ¿Qué hace \`git merge\`? ¿Qué diferencia notaste entre los merges de las misiones 5 y 8 y el de la misión 9?
+  - ¿Por qué apareció el conflicto y cómo lo resolviste?
+- Antes de escribir, mira tu propio historial: te ayudará a contarlo.
+
+\`\`\`bash
+git log --oneline --graph --all
+\`\`\`
+
+- Publica tu explicación:
 
 \`\`\`bash
 git add .
-git commit -m "Documenta el flujo de ramas y merges"
+git commit -m "Explica el flujo de ramas y merges en la bitacora"
 git push
 \`\`\`
 
-- Puedes revisar localmente antes de publicar:
-
-\`\`\`bash
-npm run validate:readme
-npm run validate:branching
-\`\`\`
-
 ## Criterio de cierre
-Esta es la última misión. El workflow la cerrará cuando el README publicado en \`main\` tenga la estructura obligatoria y explique commits, push, ramas y merge.`
+Esta es la última misión. El workflow la cerrará cuando \`bitacora.md\` explique, con tus palabras, commit, push, ramas, merge y el conflicto.`
   }
 ];
 
@@ -701,7 +652,7 @@ ${mission.diagram}
 ${mission.body}
 
 ## Seguimiento automático
-Cuando publiques cambios, el workflow **Validar progreso de misiones** revisará los criterios verificables. Si cumples, comentará el resultado, cerrará este issue y creará la siguiente misión. Si todavía falta algo, dejará una checklist con lo que debes corregir.
+Cuando publiques cambios, el workflow **Validar progreso de misiones** revisará los criterios. Si cumples, comentará el resultado, cerrará este issue y creará la siguiente misión. Si todavía falta algo, dejará una checklist con lo que debes corregir.
 
 No cierres este issue manualmente. Si se cierra desde la interfaz de GitHub, el workflow **Proteger cierre de misiones** lo reabrirá.
 

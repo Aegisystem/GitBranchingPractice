@@ -25,6 +25,6 @@ jobs:
           node-version: 20
 
       - name: Crear issues iniciales
-        run: npm run create:initial-issues
+        run: node .github/scripts/create-initial-issues.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

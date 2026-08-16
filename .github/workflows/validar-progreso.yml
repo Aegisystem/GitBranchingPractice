@@ -32,6 +32,6 @@ jobs:
           node-version: 20
 
       - name: Validar progreso y comentar issue
-        run: npm run validate:progress
+        run: node .github/scripts/validate-progress.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

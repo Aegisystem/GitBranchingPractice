@@ -25,6 +25,6 @@ jobs:
           node-version: 20
 
       - name: Proteger cierre automático
-        run: npm run guard:manual-close
+        run: node .github/scripts/guard-manual-issue-close.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

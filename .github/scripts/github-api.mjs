@@ -1,4 +1,4 @@
-import { missionIssueBody, missionIssueTitle, missionMarker } from "./practice-missions.js";
+import { missionIssueBody, missionIssueTitle, missionMarker } from "./practice-missions.mjs";
 
 export function getRepositoryFromEnv() {
   const repository = process.env.GITHUB_REPOSITORY;

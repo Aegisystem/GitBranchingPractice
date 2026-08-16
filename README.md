@@ -1,84 +1,164 @@
-# Nombre del Proyecto
+# Práctica de Git: commits, push, ramas y merges
 
-Git Branching Practice
+Esta es una práctica guiada. GitHub te irá creando **misiones** como *issues*: cada una explica qué hacer, por qué, y revisa sola si lo lograste. Cuando cumples una, se cierra y aparece la siguiente.
 
-## Descripción
+No necesitas instalar nada: solo Git y un editor de texto.
 
-Repositorio plantilla para una práctica guiada de Git centrada en cuatro operaciones: **commits, push, creación de ramas y merge** (incluida la resolución de un conflicto).
+---
 
-La práctica crea issues progresivos en GitHub. Cada issue explica una misión, y un workflow revisa el repositorio, comenta qué falta, cierra la misión cuando se cumple el criterio y crea la siguiente.
+## 1. Prepara tu repositorio
 
-Es la versión introductoria de la práctica de Git Flow: aquí no hay Pull Requests, releases, tags ni hotfixes. Todo se resuelve con seis comandos: `git add .`, `git commit -m`, `git push`, `git checkout -b`, `git checkout` y `git merge`.
-
-El proyecto base es un programa mínimo en Node.js que imprime una lista de mensajes. Cada misión agrega una línea a esa lista, y eso permite provocar un conflicto de merge real.
-
-## Instalación
-
-Necesitas Node.js 20 o superior. El proyecto no tiene dependencias externas, así que no hace falta `npm install`.
-
-Para usarlo como estudiante:
-
-1. Crea un repositorio desde este template (**Use this template**) o haz fork.
-2. Clónalo en tu equipo.
-3. Entra a la pestaña **Actions** y espera que se ejecute **Iniciar práctica**, o ejecútalo manualmente si el primer issue no aparece.
-
-## Uso
-
-Ejecuta el proyecto:
+1. Pulsa **Use this template > Create a new repository** para crear tu propia copia.
+2. Clónala en tu computador y entra a la carpeta:
 
 ```bash
-npm start
+git clone https://github.com/TU_USUARIO/NOMBRE_DE_TU_REPO.git
 ```
 
-Salida esperada al inicio de la práctica:
+3. Si es la primera vez que usas Git en este equipo, configúralo:
+
+```bash
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu-correo@ejemplo.com"
+git config --global push.autoSetupRemote true
+```
+
+La tercera línea permite que `git push`, a secas, publique también las ramas nuevas.
+
+4. Entra a la pestaña **Issues** de tu repositorio: ahí te espera la Misión 01.
+
+Si no aparece después de unos minutos, ve a **Actions > Iniciar práctica > Run workflow**.
+
+---
+
+## 2. Los comandos que vas a usar
+
+Toda la práctica se hace con estos seis:
+
+| Comando | Qué hace |
+| --- | --- |
+| `git add .` | Marca todos tus cambios para incluirlos en el próximo commit. |
+| `git commit -m "Mensaje"` | Guarda los cambios marcados en el historial **de tu computador**. |
+| `git push` | Publica en GitHub los commits de la rama en la que estás. |
+| `git checkout -b ramaNueva` | Crea una rama y te cambia a ella. |
+| `git checkout rama` | Te cambia a una rama que ya existe. |
+| `git merge rama` | Trae a tu rama actual el trabajo de otra rama. |
+
+No necesitas ninguno más. Estos otros solo **miran** el repositorio, no lo modifican, y puedes usarlos cuando quieras:
+
+| Comando de consulta | Qué muestra |
+| --- | --- |
+| `git status` | En qué rama estás y qué cambios tienes sin guardar. |
+| `git log --oneline --graph --all` | El historial dibujado, con sus ramas y merges. |
+| `git branch` | La lista de ramas, con un asterisco en la actual. |
+
+**Regla que evita el 90% de los problemas: antes de hacer cualquier cosa, ejecuta `git status`.**
+
+---
+
+## 3. Los dos archivos que vas a editar
+
+| Archivo | Para qué |
+| --- | --- |
+| `bitacora.md` | Anotas tu avance (misiones 1 y 2) y explicas lo aprendido (misión 10). |
+| `mensajes.txt` | Una lista de líneas. Cada rama le agrega una, y así se provoca el conflicto de la misión 9. |
+
+Se editan con cualquier editor de texto. No hay nada que instalar ni ejecutar.
+
+---
+
+## 4. Las 10 misiones
+
+| # | Misión | Qué practicas |
+| --- | --- | --- |
+| 1 | Tu primer commit en `main` | `git add .`, `git commit -m`, `git push` |
+| 2 | Publicar varios commits | commits pequeños y con mensaje claro |
+| 3 | Crear la rama `feature/saludo` | `git checkout -b` |
+| 4 | Commit dentro de la rama | que `main` no se entere: aislamiento |
+| 5 | Fusionar `feature/saludo` en `main` | `git merge` (fast-forward) |
+| 6 | Crear `feature/despedida` desde `main` | volver a `main` antes de ramificar |
+| 7 | Commit y push en la segunda rama | repetir el ciclo |
+| 8 | Fusionar y moverte entre ramas | `git merge` y `git checkout rama` |
+| 9 | Provocar y resolver un conflicto | merge con commit de fusión |
+| 10 | Explicar el flujo en tu bitácora | contar lo que entendiste |
+
+Cada issue trae los pasos, un diagrama de cómo cambia tu historial y el criterio exacto por el que se cierra. **Léelos: son la práctica.** Esta guía solo es el mapa.
+
+---
+
+## 5. Cómo se corrige sola
+
+Cada vez que publicas algo con `git push`, o creas una rama, un proceso automático revisa tu repositorio y comenta en el issue de la misión:
+
+- una checklist de lo que ya cumples y lo que falta;
+- el dibujo real de tu historial;
+- si aún no cumples, el diagrama de adónde tienes que llegar.
+
+Si todo está bien, cierra el issue y crea la siguiente misión.
+
+Algunos puntos aparecen marcados como *(informativo)*: son observaciones para que aprendas, no te bloquean.
+
+**No cierres los issues a mano.** Un workflow los reabre: el cierre lo da la validación.
+
+¿Atascado? Ve a **Actions > Validar progreso de misiones > Run workflow** para forzar una revisión.
+
+---
+
+## 6. Copia los textos exactos
+
+Las misiones 4, 7 y 9 piden agregar líneas concretas a `mensajes.txt`. La revisión automática busca ese texto literal, así que cópialo tal cual, con sus mayúsculas y acentos:
 
 ```text
-Práctica de ramas y merges en Git
----------------------------------
-1. Mensaje inicial de la plantilla
----------------------------------
-Total de mensajes: 1
+Saludo desde la rama feature/saludo
+Despedida desde la rama feature/despedida
+Mensaje escrito en la rama feature/conflicto
+Mensaje escrito directamente en main
 ```
 
-A medida que completes las misiones, la lista crece con los mensajes que agregues desde cada rama.
+---
 
-Validaciones locales:
+## 7. Resolver un conflicto, en corto
+
+Cuando dos ramas cambian la misma línea, Git no decide por ti y deja el archivo así:
+
+```text
+<<<<<<< HEAD
+Lo que dice la rama en la que estás parado
+=======
+Lo que dice la rama que estás fusionando
+>>>>>>> feature/conflicto
+```
+
+Para resolverlo:
+
+1. Abre el archivo y decide qué debe quedar. En la misión 9: **las dos líneas**.
+2. Borra las tres líneas de marcas: `<<<<<<<`, `=======` y `>>>>>>>`.
+3. Guarda y cierra el merge con el ciclo de siempre:
 
 ```bash
-npm run validate:readme
-BRANCHING_STRICT_FINAL=false npm run validate:branching
+git add .
+git commit -m "Resuelve el conflicto conservando ambos mensajes"
+git push
 ```
 
-## Autores
+Si prefieres empezar el merge de cero, `git merge --abort` lo cancela y te deja como antes de intentarlo.
 
-- Plantilla para estudiantes de Ingeniería de Software.
-- Docente responsable: ajustar según el curso.
+---
 
-## Flujo de trabajo Git
+## 8. Errores frecuentes
 
-La práctica usa un flujo mínimo de dos niveles:
+| Lo que dice Git | Qué significa | Qué hacer |
+| --- | --- | --- |
+| `has no upstream branch` | Estás publicando una rama nueva y falta la configuración del paso 1. | `git config --global push.autoSetupRemote true` y repite `git push`. |
+| `fatal: not a git repository` | No estás dentro de la carpeta del repositorio. | Entra a la carpeta que clonaste. |
+| `Please tell me who you are` | Falta configurar tu identidad. | Ejecuta los `git config --global` del paso 1. |
+| `nothing to commit, working tree clean` | No hay cambios que guardar. | Edita **y guarda** el archivo antes de `git add .`. |
+| `Your local changes would be overwritten` | Quieres cambiar de rama con cambios sin guardar. | Haz `git add .` y `git commit -m "..."` antes del `git checkout`. |
+| `CONFLICT (content): Merge conflict in ...` | Dos ramas cambiaron la misma línea. | Resuélvelo como se explica arriba. |
+| `Already up to date` | Esa rama ya estaba integrada. | Nada que hacer: mira `git log --oneline --graph --all`. |
 
-- `main`: rama estable donde se integra todo.
-- `feature/saludo`: primera rama de trabajo, se fusiona con un merge fast-forward.
-- `feature/despedida`: segunda rama, creada desde un `main` ya actualizado.
-- `feature/conflicto`: rama que cambia la misma línea que `main` para provocar y resolver un conflicto.
+---
 
-Secuencia de las 10 misiones:
+## 9. Sobre usar IA
 
-1. Hacer el primer commit en `main` y publicarlo.
-2. Publicar varios commits pequeños con `git push`.
-3. Crear y publicar `feature/saludo`.
-4. Hacer commits dentro de la rama, sin tocar `main`.
-5. Fusionar `feature/saludo` en `main` con `git merge`.
-6. Crear `feature/despedida` desde un `main` actualizado.
-7. Hacer commit y push en la segunda rama.
-8. Fusionar la segunda rama y moverse entre ramas con `git checkout`.
-9. Provocar un conflicto y resolverlo conservando ambos cambios.
-10. Documentar el flujo en el README.
-
-Los issues de misión no se cierran manualmente: el workflow **Validar progreso de misiones** los cierra al detectar que el criterio se cumplió, y **Proteger cierre de misiones** reabre los que se cierren desde la interfaz de GitHub.
-
-## Documentación
-
-- [Instrucciones para estudiantes](docs/instrucciones-estudiante.md)
-- [Instrucciones para docentes](docs/instrucciones-docente.md)
+Puedes apoyarte en un asistente de IA para **entender** conceptos y mensajes de error, no para que haga la práctica por ti. Lo que se evalúa es que ejecutes tú los comandos y sepas explicar qué hace cada uno. Pídele que te explique, no que te resuelva.
