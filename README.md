@@ -82,4 +82,3 @@ Los issues de misión no se cierran manualmente: el workflow **Validar progreso 
 
 - [Instrucciones para estudiantes](docs/instrucciones-estudiante.md)
 - [Instrucciones para docentes](docs/instrucciones-docente.md)
-- [Instrucciones para asistentes de IA (modo tutor)](docs/prompt-para-ia.md)

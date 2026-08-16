@@ -89,7 +89,7 @@ node --check scripts/validate-branching.js
 
 ## Uso de IA por parte de los estudiantes
 
-El repositorio incluye instrucciones para asistentes de IA en `docs/prompt-para-ia.md`, con copias de enganche en `AGENTS.md`, `CLAUDE.md` y `.github/copilot-instructions.md`. Esos archivos hacen que el asistente responda como tutor: explica conceptos, interpreta errores y da pistas, pero no ejecuta los commits, ramas ni merges por el estudiante.
+El repositorio incluye instrucciones para asistentes de IA en `.github/instructions/tutoria.md`, fuera de la documentación que lee el estudiante. Las cargan los archivos de enganche que cada herramienta busca por convención: `CLAUDE.md` y `AGENTS.md` en la raíz y `.github/copilot-instructions.md`. Esos archivos hacen que el asistente responda como tutor: explica conceptos, interpreta errores y da pistas, pero no ejecuta los commits, ramas ni merges por el estudiante.
 
 Ten en cuenta el alcance real: son instrucciones que el asistente lee y normalmente respeta, no un bloqueo técnico. Un estudiante decidido puede ignorarlas. Por eso conviene complementarlas con evidencia del proceso: el historial de commits (fechas y tamaño de cada commit), los comentarios de los workflows y, si tu curso lo permite, una defensa oral breve sobre lo que hizo.
 

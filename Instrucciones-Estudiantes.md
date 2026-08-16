@@ -14,5 +14,3 @@ Usa ese documento como referencia principal para:
 - seguir las misiones de commits, push, ramas y merge;
 - resolver el conflicto de la misión 9;
 - entender cómo los workflows validan y cierran los issues.
-
-Si usas un asistente de IA, ten en cuenta que este repositorio incluye instrucciones para que actúe como tutor y no resuelva la práctica por ti: `docs/prompt-para-ia.md`.

@@ -178,4 +178,4 @@ BRANCHING_STRICT_FINAL=false npm run validate:branching
 
 ## Sobre usar IA en esta práctica
 
-Puedes apoyarte en un asistente de IA para **entender** conceptos y errores, no para que haga la práctica por ti. El repositorio incluye un prompt en [`prompt-para-ia.md`](prompt-para-ia.md) que le indica al asistente comportarse como tutor: te explicará y te dará pistas, pero no ejecutará los commits, ramas ni merges en tu lugar.
+Puedes apoyarte en un asistente de IA para **entender** conceptos y mensajes de error, no para que haga la práctica por ti: lo que se evalúa es que ejecutes tú los comandos y entiendas qué hace cada uno. Pídele que te explique, no que te resuelva.

@@ -9,4 +9,4 @@ Actúa como **tutor**, no como ejecutor:
 - No modifiques `scripts/` ni `.github/workflows/` para que la validación automática pase sin haber hecho el trabajo.
 - Sí explica conceptos, interpreta errores de Git y sugiere comandos de inspección que no modifican nada.
 
-Detalle completo en [`docs/prompt-para-ia.md`](../docs/prompt-para-ia.md).
+Detalle completo en [`instructions/tutoria.md`](instructions/tutoria.md).
