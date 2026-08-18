@@ -25,13 +25,19 @@ git config --global push.autoSetupRemote true
 
 La tercera línea permite que `git push`, a secas, publique también las ramas nuevas.
 
-4. Entra a la pestaña **Issues** de tu repositorio: ahí te espera la Misión 01.
+---
 
-Si no aparece después de unos minutos, ve a **Actions > Iniciar práctica > Run workflow**.
+## 2. Dónde están las misiones
+
+Toda la práctica vive en la pestaña **Issues** de tu repositorio. Ahí te espera la **Misión 01**; cada issue trae los pasos, un diagrama de cómo cambia tu historial y el criterio exacto por el que se cierra. **Léelos con calma: los issues son la práctica.** Esta guía solo es el mapa.
+
+- Si la Misión 01 no aparece a los pocos minutos de crear tu repositorio, ve a **Actions > Iniciar práctica > Run workflow**.
+- Las misiones salen **de una en una**: al cerrarse la que estás haciendo, aparece la siguiente. No hay una lista que puedas adelantar; se descubren jugando.
+- **No cierres los issues a mano.** Un workflow los reabre: el cierre lo da la validación.
 
 ---
 
-## 2. Los comandos que vas a usar
+## 3. Los comandos que vas a usar
 
 Toda la práctica se hace con estos seis:
 
@@ -56,37 +62,18 @@ No necesitas ninguno más. Estos otros solo **miran** el repositorio, no lo modi
 
 ---
 
-## 3. Los dos archivos que vas a editar
+## 4. Los dos archivos que vas a editar
 
 | Archivo | Para qué |
 | --- | --- |
-| `bitacora.md` | Anotas tu avance (misiones 1 y 2) y explicas lo aprendido (misión 10). |
-| `mensajes.txt` | Una lista de líneas. Cada rama le agrega una, y así se provoca el conflicto de la misión 9. |
+| `bitacora.md` | Anotas tu avance y, al final, explicas con tus palabras lo aprendido. |
+| `mensajes.txt` | Una lista de líneas. Cada rama le agrega la suya; algunas misiones te pedirán textos concretos. |
 
-Se editan con cualquier editor de texto. No hay nada que instalar ni ejecutar.
-
----
-
-## 4. Las 10 misiones
-
-| # | Misión | Qué practicas |
-| --- | --- | --- |
-| 1 | Tu primer commit en `main` | `git add .`, `git commit -m`, `git push` |
-| 2 | Publicar varios commits | commits pequeños y con mensaje claro |
-| 3 | Crear la rama `feature/saludo` | `git checkout -b` |
-| 4 | Commit dentro de la rama | que `main` no se entere: aislamiento |
-| 5 | Fusionar `feature/saludo` en `main` | `git merge` (fast-forward) |
-| 6 | Crear `feature/despedida` desde `main` | volver a `main` antes de ramificar |
-| 7 | Commit y push en la segunda rama | repetir el ciclo |
-| 8 | Fusionar y moverte entre ramas | `git merge` y `git checkout rama` |
-| 9 | Provocar y resolver un conflicto | merge con commit de fusión |
-| 10 | Explicar el flujo en tu bitácora | contar lo que entendiste |
-
-Cada issue trae los pasos, un diagrama de cómo cambia tu historial y el criterio exacto por el que se cierra. **Léelos: son la práctica.** Esta guía solo es el mapa.
+Se editan con cualquier editor de texto. No hay nada que instalar ni ejecutar. Cuando una misión te pida un texto literal, cópialo tal cual desde el propio issue (con sus mayúsculas y acentos): la revisión automática lo busca exacto.
 
 ---
 
-## 5. Cómo se corrige sola
+## 5. Cómo se valida (se corrige sola)
 
 Cada vez que publicas algo con `git push`, o creas una rama, un proceso automático revisa tu repositorio y comenta en el issue de la misión:
 
@@ -94,30 +81,15 @@ Cada vez que publicas algo con `git push`, o creas una rama, un proceso automát
 - el dibujo real de tu historial;
 - si aún no cumples, el diagrama de adónde tienes que llegar.
 
-Si todo está bien, cierra el issue y crea la siguiente misión.
+Si todo está bien, cierra el issue y crea la siguiente misión. Así sabes que una misión quedó cumplida: **el issue se cierra solo y aparece el siguiente**.
 
 Algunos puntos aparecen marcados como *(informativo)*: son observaciones para que aprendas, no te bloquean.
 
-**No cierres los issues a mano.** Un workflow los reabre: el cierre lo da la validación.
-
-¿Atascado? Ve a **Actions > Validar progreso de misiones > Run workflow** para forzar una revisión.
+¿Atascado o no ves respuesta? Ve a **Actions > Validar progreso de misiones > Run workflow** para forzar una revisión.
 
 ---
 
-## 6. Copia los textos exactos
-
-Las misiones 4, 7 y 9 piden agregar líneas concretas a `mensajes.txt`. La revisión automática busca ese texto literal, así que cópialo tal cual, con sus mayúsculas y acentos:
-
-```text
-Saludo desde la rama feature/saludo
-Despedida desde la rama feature/despedida
-Mensaje escrito en la rama feature/conflicto
-Mensaje escrito directamente en main
-```
-
----
-
-## 7. Resolver un conflicto, en corto
+## 6. Resolver un conflicto, en corto
 
 Cuando dos ramas cambian la misma línea, Git no decide por ti y deja el archivo así:
 
@@ -131,13 +103,13 @@ Lo que dice la rama que estás fusionando
 
 Para resolverlo:
 
-1. Abre el archivo y decide qué debe quedar. En la misión 9: **las dos líneas**.
+1. Abre el archivo y decide qué debe quedar (el issue te dirá el criterio).
 2. Borra las tres líneas de marcas: `<<<<<<<`, `=======` y `>>>>>>>`.
 3. Guarda y cierra el merge con el ciclo de siempre:
 
 ```bash
 git add .
-git commit -m "Resuelve el conflicto conservando ambos mensajes"
+git commit -m "Resuelve el conflicto"
 git push
 ```
 
@@ -145,7 +117,7 @@ Si prefieres empezar el merge de cero, `git merge --abort` lo cancela y te deja 
 
 ---
 
-## 8. Errores frecuentes
+## 7. Errores frecuentes
 
 | Lo que dice Git | Qué significa | Qué hacer |
 | --- | --- | --- |
@@ -159,6 +131,6 @@ Si prefieres empezar el merge de cero, `git merge --abort` lo cancela y te deja 
 
 ---
 
-## 9. Sobre usar IA
+## 8. Sobre usar IA
 
 Puedes apoyarte en un asistente de IA para **entender** conceptos y mensajes de error, no para que haga la práctica por ti. Lo que se evalúa es que ejecutes tú los comandos y sepas explicar qué hace cada uno. Pídele que te explique, no que te resuelva.

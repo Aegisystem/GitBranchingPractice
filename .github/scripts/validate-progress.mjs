@@ -430,7 +430,7 @@ export function formatFeedback(mission, validation, statusText) {
 ${graph}
 \`\`\`
 
-Compáralo con el diagrama de la misión: cada bifurcación del dibujo debería tener su equivalente aquí.
+Cada rama y merge que hiciste debería verse reflejado aquí.
 
 La misión cumple los criterios. Se cierra y se prepara la siguiente.`
     : `### Cómo está tu historial ahora
@@ -439,10 +439,7 @@ La misión cumple los criterios. Se cierra y se prepara la siguiente.`
 ${graph}
 \`\`\`
 
-### Adónde tiene que llegar
-${mission.diagram}
-
-Cuando publiques nuevos cambios, esta revisión se actualizará sola.`;
+Revisa la checklist de arriba y corrige lo que falte. Cuando publiques nuevos cambios, esta revisión se actualizará sola.`;
 
   return `## Seguimiento automático
 
